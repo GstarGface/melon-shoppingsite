@@ -7,7 +7,7 @@ Authors: Joel Burton, Christian Fernandez, Meggie Mahnken.
 """
 
 
-from flask import Flask, render_template, redirect, flash
+from flask import Flask, render_template, redirect, flash, session
 import jinja2
 
 import model
@@ -51,6 +51,8 @@ def show_melon(id):
     """
 
     melon = model.Melon.get_by_id(id)
+    session['test_session']= 'test session'
+    print session['test_session']
     print melon
     return render_template("melon_details.html",
                            display_melon=melon)
@@ -77,7 +79,15 @@ def add_to_cart(id):
     # TODO: Finish shopping cart functionality
     #   - use session variables to hold cart list
 
-    return "Oops! This needs to be implemented!"
+    if 'cart' in session:
+        session['cart'].append(id)
+    else:
+        session['cart'] = [id]
+    
+
+    flash("Added melon to cart!")
+
+    return render_template("cart.html")
 
 
 @app.route("/login", methods=["GET"])
