@@ -65,6 +65,18 @@ def shopping_cart():
     # TODO: Display the contents of the shopping cart.
     #   - The cart is a list in session containing melons added
 
+    cart = {}
+    shopping_list = session['cart']
+
+    for melon_id in shopping_list:
+        if melon_id not in cart:
+            melon_info = model.Melon.get_by_id(melon_id)
+            cart[melon_id] = {'name': melon_info.common_name,'price': melon_info.price, 'qty': 1, 'melon total': melon_info.price}
+        else: 
+            cart[melon_id]['qty'] += 1
+            cart[melon_id]['melon total'] += cart[melon_id]['price']
+                 
+    # print cart             
     return render_template("cart.html")
 
 
